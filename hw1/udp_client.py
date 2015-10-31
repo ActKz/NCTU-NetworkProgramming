@@ -1,12 +1,18 @@
 import socket
 import json
-dest_ip = "127.0.0.1"
-dest_port = 5566
+import sys
+#dest_ip = "127.0.0.1"
+#dest_port = 5566
 bottom = 3000
 top = 60000
 mid = 0
 soc = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-
+if len(sys.argv) <4:
+    print("Usage: "+sys.argv[0]+" [dest_ip] [dest_port] [your_id]")
+    exit()
+dest_ip = sys.argv[1]
+dest_port = int(sys.argv[2])
+Id = sys.argv[3]
 while True:
     mid = (bottom + top) /2
     soc.sendto("{'guess':"+str(mid)+"}",(dest_ip,dest_port))
@@ -20,7 +26,7 @@ while True:
         top = mid
     elif res['result']=="bingo!":
         goal = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-        goal.sendto("{'student_id':'0216003'}",(dest_ip,mid))
+        goal.sendto("{'student_id':'"+Id+"'}",(dest_ip,mid))
         r, ad = goal.recvfrom(1024)
         print r
         break
